@@ -17,6 +17,10 @@ AddOption('--asan',
           action='store_true',
           help='turn on ASAN')
 
+AddOption('--clazy',
+          action='store_true',
+          help='build with clazy')
+
 real_arch = arch = subprocess.check_output(["uname", "-m"], encoding='utf8').rstrip()
 if platform.system() == "Darwin":
   arch = "Darwin"
@@ -89,10 +93,12 @@ else:
       "#cereal",
       "#selfdrive/common",
       "/usr/local/lib",
+      "/usr/local/opt/openssl/lib",
       "/System/Library/Frameworks/OpenGL.framework/Libraries",
     ]
     cflags += ["-DGL_SILENCE_DEPRECATION"]
     cxxflags += ["-DGL_SILENCE_DEPRECATION"]
+    cpppath += ["/usr/local/opt/openssl/include"]
   else:
     libpath = [
       "#phonelibs/snpe/x86_64-linux-clang",
@@ -296,4 +302,3 @@ if arch != "Darwin":
 
 if arch == "x86_64":
   SConscript(['tools/lib/index_log/SConscript'])
-
